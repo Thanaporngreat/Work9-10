@@ -91,7 +91,7 @@ class _PlayerSelectionState extends State<PlayerSelection> {
               child: GridView.builder(
                 padding: const EdgeInsets.all(12),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,             // desktop; มือถือจะปรับเป็น 2-3 ได้เองถ้าปรับที่นี่
+                  crossAxisCount: 5, // desktop; มือถือจะปรับเป็น 2-3 ได้เองถ้าปรับที่นี่
                   mainAxisSpacing: 12,
                   crossAxisSpacing: 12,
                   childAspectRatio: .78,
@@ -104,7 +104,6 @@ class _PlayerSelectionState extends State<PlayerSelection> {
                     child: Column(
                       children: [
                         const SizedBox(height: 8),
-                        // อวาตาร์วงกลม + contain ไม่ครอป
                         CircleAvatar(
                           radius: 44,
                           backgroundColor: cs.secondaryContainer,
@@ -151,28 +150,39 @@ class _PlayerSelectionState extends State<PlayerSelection> {
               ),
             ),
 
-            // --------- ปุ่ม Create Team ----------
+            // --------- ปุ่ม Profile + Create Team ----------
             SafeArea(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Obx(() => FilledButton.icon(
-                        onPressed: c.selected.length == 3
-                            ? () async {
-                                final name = await _askTeamName(context);
-                                if (name != null && name.trim().isNotEmpty) {
-                                  c.createTeam(name.trim());
-                                }
-                              }
-                            : null,
-                        icon: const Icon(Icons.save),
-                        label: Text(
-                          c.selected.length == 3
-                              ? 'Create Team'
-                              : 'Pick ${3 - c.selected.length} more',
-                        ),
-                      )),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => Get.toNamed('/profile'),
+                        icon: const Icon(Icons.person_outline),
+                        label: const Text('กดเพื่อไปอีกหน้า'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Obx(() => FilledButton.icon(
+                            onPressed: c.selected.length == 3
+                                ? () async {
+                                    final name = await _askTeamName(context);
+                                    if (name != null && name.trim().isNotEmpty) {
+                                      c.createTeam(name.trim());
+                                    }
+                                  }
+                                : null,
+                            icon: const Icon(Icons.save),
+                            label: Text(
+                              c.selected.length == 3
+                                  ? 'Create Team'
+                                  : 'Pick ${3 - c.selected.length} more',
+                            ),
+                          )),
+                    ),
+                  ],
                 ),
               ),
             ),
